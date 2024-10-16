@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const connectDB = require("./constant/db");
 const Product = require("./models/productModels");
 const app = express();
 
@@ -86,14 +87,8 @@ app.delete("/deleteProduct/:id", async (req, res) => {
 });
 
 //mongoDB connectivity
-mongoose
-  .connect("mongodb+srv://admin:admin123@nodeapi.zbvgq.mongodb.net/Node-API")
-  .then(() => {
-    console.log("Connected to MongoDB");
-    app.listen(3000, () => {
-      console.log(`NodeAPI app is running on port 3000`);
-    });
-  })
-  .catch((error) => {
-    console.log(error);
+connectDB().then(() => {
+  app.listen(3000, () => {
+    console.log("NodeAPI app is running on port 3000");
   });
+});

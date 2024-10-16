@@ -27,6 +27,14 @@ router.post("/signup", async (req, res) => {
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
+    // Check if it's a validation error
+    if (error.name === "ValidationError") {
+      const emailError = error.errors.email
+        ? error.errors.email.message
+        : "Validation error occurred";
+      return res.status(400).json({ message: emailError });
+    }
+
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }

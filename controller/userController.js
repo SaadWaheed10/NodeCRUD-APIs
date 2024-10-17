@@ -78,4 +78,72 @@ const signInUser = async (req, res) => {
   }
 };
 
-module.exports = { signUpUser, signInUser };
+//get all user contoller
+const getAllUsers = async (req, res) => {
+  try {
+    const allUsers = await User.find({});
+    return res.status(200).json(allUsers);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//delete user by id
+const deleteUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteUser = await User.findByIdAndDelete(id);
+
+    if (!deleteUser) {
+      res
+        .status(404)
+        .json({ message: `Cannot find the user with this ID ${id}` });
+    }
+    res.status(200).json(deleteUser);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// get user by id
+const getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const findUser = await User.findById(id);
+
+    if (!findUser) {
+      res.status(404).json({ message: `Cannot find user with this ID ${id}` });
+    }
+    res.status(200).json(findUser);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//update user by ID
+const updateUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateUser = await User.findByIdAndUpdate(id, req.body);
+
+    if (!updateUser) {
+      res.status(404).json({ message: `Cannot find user with this  ID ${id}` });
+    }
+
+    const updatedUser = await User.findById(id);
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = {
+  signUpUser,
+  signInUser,
+  getAllUsers,
+  deleteUserById,
+  getUserById,
+  updateUserById,
+};
